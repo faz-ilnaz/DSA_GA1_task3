@@ -1,10 +1,10 @@
 package ru.innopolis.university.dsa.ga1.task3.ast;
 
-class Long extends Primary {
+class Double extends Primary {
 
-    private long value;
+    private double value;
 
-    Long(long value) {
+    Double(double value) {
         this.value = value;
     }
 
@@ -18,15 +18,16 @@ class Long extends Primary {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Long aLong = (Long) o;
+        Double aDouble = (Double) o;
 
-        return value == aLong.value;
+        return java.lang.Double.compare(aDouble.value, value) == 0;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (value ^ (value >>> 32));
+        long temp = java.lang.Double.doubleToLongBits(value);
+        return (int) (temp ^ (temp >>> 32));
     }
 
     @Override

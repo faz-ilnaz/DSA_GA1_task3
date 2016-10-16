@@ -68,7 +68,7 @@ public class Parser {
         char currChar = currChar();
 
         if (Character.isDigit(currChar)) {
-            result = parseInteger();
+            result = parseDouble();
         } else if (currChar == '(') {
             acceptCurrentChar();
             result = new Parenthesized(parse());
@@ -80,18 +80,19 @@ public class Parser {
         return result;
     }
 
-    private Long parseInteger() {
+    private Double parseDouble() {
         StringBuilder sb = new StringBuilder();
         if (Character.isDigit(currChar())) {
             sb.append(currChar());
             acceptCurrentChar();
         }
-        while (!endOfLn() && Character.isDigit(currChar())) {
+        while (!endOfLn() &&
+                (Character.isDigit(currChar()) || currChar() == '.')) {
             sb.append(currChar());
             acceptCurrentChar();
         }
-        long value = java.lang.Long.parseLong(sb.toString());
-        return new Long(value);
+        double value = java.lang.Double.parseDouble(sb.toString());
+        return new Double(value);
     }
 
     private Expression handleMathFunc() {

@@ -10,8 +10,11 @@
 
 Usage example:
 ```java
-String input = "sin(1)^2 + cos(1)^2";
+String input = "sin(1)^2 + cos(1.0)^2";
 Parser parser = new Parser(input);
 Expression exp = parser.parse();
 
 double result = exp.calculate();
+```
+
+result is 1.0

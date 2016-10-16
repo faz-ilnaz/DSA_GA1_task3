@@ -12,7 +12,7 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Term(Term.OpCode.ADD, new Long(2), new Long(2));
+        Expression expected = new Term(Term.OpCode.ADD, new Double(2), new Double(2));
         assertEquals(expected, actual);
         assertEquals(4, actual.calculate(), 0);
     }
@@ -23,7 +23,7 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Term(Term.OpCode.SUB, new Long(5), new Long(0));
+        Expression expected = new Term(Term.OpCode.SUB, new Double(5), new Double(0));
         assertEquals(expected, actual);
         assertEquals(5, actual.calculate(), 0);
     }
@@ -35,8 +35,8 @@ public class ParserTest {
         Expression actual = parser.parse();
 
         Expression expected = new Term(Term.OpCode.ADD,
-                new Factor(Factor.OpCode.MULT, new Sin(new Long(1)), new Sin(new Long(1))),
-                new Factor(Factor.OpCode.MULT, new Cos(new Long(1)), new Cos(new Long(1))));
+                new Factor(Factor.OpCode.MULT, new Sin(new Double(1)), new Sin(new Double(1))),
+                new Factor(Factor.OpCode.MULT, new Cos(new Double(1)), new Cos(new Double(1))));
         assertEquals(expected, actual);
         assertEquals(1, actual.calculate(), 0);
     }
@@ -48,8 +48,8 @@ public class ParserTest {
         Expression actual = parser.parse();
 
         Expression expected = new Term(Term.OpCode.ADD,
-                new Power(Power.OpCode.POWER, new Sin(new Long(1)), new Long(2)),
-                new Power(Power.OpCode.POWER, new Cos(new Long(1)), new Long(2)));
+                new Power(Power.OpCode.POWER, new Sin(new Double(1)), new Double(2)),
+                new Power(Power.OpCode.POWER, new Cos(new Double(1)), new Double(2)));
         assertEquals(expected, actual);
         assertEquals(1, actual.calculate(), 0);
     }
@@ -65,18 +65,18 @@ public class ParserTest {
                         new Term(Term.OpCode.ADD,
                                 new Factor(
                                         Factor.OpCode.MULT,
-                                        new Long(2),
-                                        new Long(2)
+                                        new Double(2),
+                                        new Double(2)
                                 ),
-                                new Long(2))
+                                new Double(2))
                 ),
                 new Parenthesized(
                         new Term(Term.OpCode.ADD,
-                                new Long(2),
+                                new Double(2),
                                 new Factor(
                                         Factor.OpCode.MULT,
-                                        new Long(2),
-                                        new Long(2)
+                                        new Double(2),
+                                        new Double(2)
                                 ))
                 ));
         assertEquals(expected, actual);
@@ -90,7 +90,7 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Sqrt(new Long(9));
+        Expression expected = new Sqrt(new Double(9));
         assertEquals(expected, actual);
         assertEquals(3.0, actual.calculate(), 0);
 
@@ -102,7 +102,7 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Sin(new Long(0));
+        Expression expected = new Sin(new Double(0));
         assertEquals(expected, actual);
         assertEquals(0, actual.calculate(), 0);
 
@@ -114,7 +114,7 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Cos(new Long(0));
+        Expression expected = new Cos(new Double(0));
         assertEquals(expected, actual);
         assertEquals(1, actual.calculate(), 0);
     }
@@ -125,7 +125,7 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Tg(new Long(0));
+        Expression expected = new Tg(new Double(0));
         assertEquals(expected, actual);
         assertEquals(0, actual.calculate(), 0);
     }
@@ -136,9 +136,31 @@ public class ParserTest {
         Parser parser = new Parser(input);
         Expression actual = parser.parse();
 
-        Expression expected = new Ctg(new Long(0));
+        Expression expected = new Ctg(new Double(0));
         assertEquals(expected, actual);
-        assertTrue(Double.isInfinite(actual.calculate()));
+        assertTrue(java.lang.Double.isInfinite(actual.calculate()));
+    }
+
+    @Test
+    public void parseAddNonInteger() throws Exception {
+        String input = "2.5+2";
+        Parser parser = new Parser(input);
+        Expression actual = parser.parse();
+
+        Expression expected = new Term(Term.OpCode.ADD, new Double(2.5), new Double(2));
+        assertEquals(expected, actual);
+        assertEquals(4.5, actual.calculate(), 0);
+    }
+
+    @Test
+    public void parseSubNonInteger() throws Exception {
+        String input = "2.542-2.250";
+        Parser parser = new Parser(input);
+        Expression actual = parser.parse();
+
+        Expression expected = new Term(Term.OpCode.SUB, new Double(2.542), new Double(2.250));
+        assertEquals(expected, actual);
+        assertEquals(0.292, actual.calculate(), 0.00001);
     }
 
 }
